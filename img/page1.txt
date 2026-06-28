@@ -1,0 +1,639 @@
+
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Visa Egypt Travel - Splash Screen</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Custom Fonts: Using Serif and Script defaults or Google Font equivalents -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Dancing+Script&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="typography">
+    .font-serif-header {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.1em;
+    }
+    .font-script {
+      font-family: 'Dancing Script', cursive;
+    }
+    .text-egypt-blue {
+      color: #1a3a5a;
+    }
+    .text-egypt-gold {
+      color: #c5a059;
+    }
+  </style>
+<style data-purpose="layout">
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #f8f8f8;
+    }
+    /* Loading bar gradient */
+    .loading-progress {
+      background: linear-gradient(90deg, #d4af37 0%, #f9e29a 100%);
+    }
+    /* Main container aspect ratio handling for mobile */
+    .splash-container {
+      max-width: 430px; /* iPhone 14/15 Pro Max width */
+      margin: 0 auto;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body>
+<!-- BEGIN: MainContainer -->
+<main class="splash-container shadow-2xl relative overflow-hidden" data-purpose="splash-screen">
+<!-- BEGIN: HeaderSection -->
+<header class="pt-10 pb-6 px-6 bg-white z-10 flex flex-col items-center text-center" data-purpose="top-branding">
+<!-- Logo Placeholder -->
+<div class="mb-2" data-purpose="logo-container">
+<img alt="Visa Egypt Travel Logo" class="h-32 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk9X9iBk_4fPfeuFxbMIpkh7vaw8c7PAY7aGEHqyxsv2WXR97gRKjJyaFa6cwerUTh70K1EMV_TXZKho209RIfi_0lIdMWbSJ01g11ojYZfKJ-V5KhIgJkzofzGF9alRV65kBpPy2mFOuaOyYyb8rgbWvHjPrCxfm9o6YmjHheN94eWg-mSXSoLbkJt2wm7OCGBFJNGDdqgojPzMYew_bUr-rGLVJdzSgnQOE8ROY7d0jqjEvhJ3cP4d9w8uXcp1XTb06GdtqfoyM"/>
+</div>
+<!-- Tagline -->
+
+<!-- Main Headline -->
+<h1 class="font-serif-header text-lg mt-8 text-egypt-blue font-semibold" data-purpose="main-headline">
+        YOUR JOURNEY BEGINS HERE
+      </h1>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: VisualContent -->
+<section class="flex-grow relative" data-purpose="background-visual">
+<!-- Background Image: Pyramids and Nile -->
+<div class="absolute inset-0">
+<img alt="Egypt Landscape" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiNnbHq8uql-6qOexuM7bYFVvi9X8ZEQU8k0pY4ekZeZKfqvIbdNd16STCAfUMvWoauRnZm9KoTPo7pLgrsba0IZ6JUhnJ6IIKf_gNuJ57omndePzynExGDjO42zJBZS8hFMWDl6dHn2bR3YE-k1Dw0wUiK036K42ztCHVc5ZNW1zSnMKw3dqDLEcACiauU7Tuo_ycH26wEmF-xo3Nlz7HiYFBikYfMRQaD7310Dy-SCxvg3lOg9uZfIFHJho5EvSv9GACt6fI_PM"/>
+</div>
+<!-- Airplane element in the sky -->
+
+<!-- Content Overlay Gradient for readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+</section>
+<!-- END: VisualContent -->
+<!-- BEGIN: LoadingSection -->
+<footer class="absolute bottom-12 left-0 right-0 px-10 flex flex-col items-center" data-purpose="footer-loading">
+<!-- Progress Bar Container -->
+<div class="w-full h-4 border border-[#c5a059] rounded-full relative bg-black/20 overflow-visible" data-purpose="loading-bar">
+<!-- Progress Fill (approx 80%) -->
+<div class="loading-progress h-full rounded-full w-[80%] transition-all duration-1000"></div>
+<!-- Progress Airplane Icon -->
+<div class="absolute -top-1 left-[80%] -translate-x-1/2 transform rotate-90" data-purpose="progress-airplane">
+<svg fill="#c5a059" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path>
+</svg>
+</div>
+</div>
+<!-- Loading Text -->
+<span class="mt-4 font-serif-header text-sm text-white tracking-widest uppercase" data-purpose="loading-text">
+        Loading...
+      </span>
+</footer>
+<!-- END: LoadingSection -->
+</main>
+<!-- END: MainContainer -->
+</body></html>
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const VisaEgyptApp());
+}
+
+class VisaEgyptApp extends StatelessWidget {
+  const VisaEgyptApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Visa Egypt',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: const Color(0xFF002366),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF002366),
+          primary: const Color(0xFF002366),
+          secondary: const Color(0xFFC5A059),
+        ),
+        fontFamily: 'Montserrat',
+        useMaterial3: true,
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
+      ),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (_) => const SplashScreen());
+          case '/language':
+            return _createFadeRoute(const LanguageSelectionScreen());
+          case '/welcome':
+            return _createSlideRoute(const WelcomeScreen());
+          case '/login':
+            return _createSlideRoute(const LoginScreen());
+          case '/register':
+            return _createSlideRoute(const CreateAccountScreen());
+          case '/verify':
+            return _createSlideRoute(const VerifyEmailScreen());
+          case '/complete-profile':
+            return _createSlideRoute(const CompleteProfileScreen());
+          case '/home':
+            return _createFadeRoute(const MainNavigationHolder());
+          case '/packages':
+            return _createSlideRoute(const PackagesScreen());
+          case '/booking-details':
+            return _createSlideRoute(const BookingDetailsScreen());
+          default:
+            return MaterialPageRoute(builder: (_) => const SplashScreen());
+        }
+      },
+    );
+  }
+
+  Route _createFadeRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    );
+  }
+
+  Route _createSlideRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOutQuart;
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return SlideTransition(position: animation.drive(tween), child: child);
+      },
+    );
+  }
+}
+
+// --- Navigation Wrapper ---
+class MainNavigationHolder extends StatefulWidget {
+  const MainNavigationHolder({super.key});
+
+  @override
+  State<MainNavigationHolder> createState() => _MainNavigationHolderState();
+}
+
+class _MainNavigationHolderState extends State<MainNavigationHolder> {
+  int _selectedIndex = 0;
+  final List<Widget> _screens = [
+    const GuestHomeScreen(),
+    const Center(child: Text('Bookings')),
+    const Center(child: Text('Offers')),
+    const Center(child: Text('Support')),
+    const Center(child: Text('Profile')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        child: _screens[_selectedIndex],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF002366),
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today_outlined), activeIcon: Icon(Icons.calendar_today), label: 'Bookings'),
+          BottomNavigationBarItem(icon: Icon(Icons.local_offer_outlined), activeIcon: Icon(Icons.local_offer), label: 'Offers'),
+          BottomNavigationBarItem(icon: Icon(Icons.support_agent), activeIcon: Icon(Icons.support_agent), label: 'Support'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+}
+
+// --- 1. Splash Screen ---
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Navigator.pushReplacementNamed(context, '/language');
+        }
+      });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(child: Image.network('{{DATA:IMAGE:IMAGE_27}}', fit: BoxFit.cover)),
+          Positioned(
+            bottom: 80,
+            left: 40,
+            right: 40,
+            child: Column(
+              children: [
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return LinearProgressIndicator(
+                      value: _animation.value,
+                      color: const Color(0xFFC5A059),
+                      backgroundColor: Colors.white24,
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                const Text('LOADING...', style: TextStyle(color: Colors.white, letterSpacing: 2, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// --- 2. Language Selection ---
+class LanguageSelectionScreen extends StatelessWidget {
+  const LanguageSelectionScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            Hero(tag: 'logo', child: Image.network('{{DATA:IMAGE:IMAGE_1}}', height: 120)),
+            const SizedBox(height: 40),
+            const Text('CHOOSE YOUR LANGUAGE', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Please select your preferred language to continue', textAlign: TextAlign.center),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                children: [
+                  _buildLangTile(context, 'English', '🇺🇸'),
+                  _buildLangTile(context, 'Español', '🇪🇸'),
+                  _buildLangTile(context, 'Français', '🇫🇷'),
+                  _buildLangTile(context, 'Deutsch', '🇩🇪'),
+                  _buildLangTile(context, 'Italiano', '🇮🇹'),
+                  _buildLangTile(context, 'العربية', '🇪🇬'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLangTile(BuildContext context, String lang, String flag) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: Text(flag, style: const TextStyle(fontSize: 24)),
+        title: Text(lang, style: const TextStyle(fontWeight: FontWeight.w500)),
+        trailing: const Icon(Icons.chevron_right, color: Color(0xFF002366)),
+        onTap: () => Navigator.pushNamed(context, '/welcome'),
+      ),
+    );
+  }
+}
+
+// --- 3. Welcome Screen ---
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(child: Image.network('{{DATA:IMAGE:IMAGE_4}}', fit: BoxFit.cover)),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [
+                  Hero(tag: 'logo', child: Image.network('{{DATA:IMAGE:IMAGE_1}}', height: 80)),
+                  const Spacer(),
+                  const Text('Welcome to Visa Egypt', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF002366))),
+                  const SizedBox(height: 8),
+                  const Text('Your all-in-one travel companion for a seamless journey', textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 32),
+                  _buildActionButton(context, 'Sign In', const Color(0xFF002366), Colors.white, () => Navigator.pushNamed(context, '/login')),
+                  const SizedBox(height: 12),
+                  _buildOutlineButton(context, 'Create Account', const Color(0xFF002366), () => Navigator.pushNamed(context, '/register')),
+                  const SizedBox(height: 12),
+                  _buildOutlineButton(context, 'Continue as Guest', const Color(0xFFC5A059), () => Navigator.pushNamed(context, '/home')),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(BuildContext context, String text, Color bg, Color textCol, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bg,
+        foregroundColor: textCol,
+        minimumSize: const Size(double.infinity, 56),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget _buildOutlineButton(BuildContext context, String text, Color color, VoidCallback onPressed) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 56),
+        side: BorderSide(color: color, width: 1.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Text(text, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)),
+    );
+  }
+}
+
+// --- 4. Guest Home Screen ---
+class GuestHomeScreen extends StatelessWidget {
+  const GuestHomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF002366),
+        leading: const Icon(Icons.menu, color: Colors.white),
+        title: const Text('VISA EGYPT', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        actions: const [
+          Icon(Icons.language, color: Colors.white),
+          SizedBox(width: 16),
+          Icon(Icons.notifications_none, color: Colors.white),
+          SizedBox(width: 16),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Image.network('{{DATA:IMAGE:IMAGE_3}}', fit: BoxFit.cover, height: 220, width: double.infinity),
+                Container(
+                  height: 220,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.black.withOpacity(0.3), Colors.transparent],
+                    ),
+                  ),
+                ),
+                const Positioned(
+                  bottom: 20,
+                  left: 20,
+                  child: Text('Welcome Guest', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Top Services', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF002366))),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.1,
+                    children: [
+                      _serviceCard(context, 'Meet & Assist', Icons.person_add_alt_1, '/packages'),
+                      _serviceCard(context, 'Visa On Arrival', Icons.card_membership, '/packages'),
+                      _serviceCard(context, 'Airport Transfer', Icons.directions_car, '/packages'),
+                      _serviceCard(context, 'Transit Tours', Icons.map, '/packages'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _serviceCard(BuildContext context, String title, IconData icon, String route) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      elevation: 2,
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, route),
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: const Color(0xFFC5A059).withOpacity(0.1), shape: BoxShape.circle),
+              child: Icon(icon, size: 36, color: const Color(0xFFC5A059)),
+            ),
+            const SizedBox(height: 12),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF002366))),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --- 5. Packages ---
+class PackagesScreen extends StatefulWidget {
+  const PackagesScreen({super.key});
+
+  @override
+  State<PackagesScreen> createState() => _PackagesScreenState();
+}
+
+class _PackagesScreenState extends State<PackagesScreen> {
+  int? _selectedPackageIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Select Your Package', style: TextStyle(fontWeight: FontWeight.bold))),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        children: [
+          _packageCard(0, 'Basic', '15 USD', ['Meet & Greet at Airport', 'Baggage Assistance'], Icons.person_outline),
+          _packageCard(1, 'Comfort', '50 USD', ['Fast Track Immigration', 'Visa On Arrival Included'], Icons.star_border),
+          _packageCard(2, 'Premium', '90 USD', ['Private Hotel Transfer', 'Airport Lounge Access'], Icons.workspace_premium_outlined),
+          _packageCard(3, 'VIP', '125 USD', ['Private Escort Service', 'Dedicated Representative'], Icons.diamond_outlined),
+        ],
+      ),
+      bottomNavigationBar: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        height: _selectedPackageIndex != null ? 100 : 0,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -2))],
+        ),
+        child: _selectedPackageIndex != null 
+          ? ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/booking-details'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF002366),
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Continue to Booking', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            )
+          : const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _packageCard(int index, String title, String price, List<String> perks, IconData icon) {
+    bool isSelected = _selectedPackageIndex == index;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedPackageIndex = index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: isSelected ? const Color(0xFFC5A059) : Colors.transparent, width: 2),
+          boxShadow: [BoxShadow(color: isSelected ? const Color(0xFFC5A059).withOpacity(0.2) : Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: isSelected ? const Color(0xFFC5A059) : const Color(0xFF002366), size: 28),
+                  const SizedBox(width: 12),
+                  Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF002366))),
+                  const Spacer(),
+                  Text(price, style: const TextStyle(color: Color(0xFFC5A059), fontWeight: FontWeight.bold, fontSize: 20)),
+                ],
+              ),
+              const Divider(height: 32),
+              ...perks.map((p) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.check_circle_outline, color: Colors.green, size: 18),
+                    const SizedBox(width: 10),
+                    Text(p, style: TextStyle(color: Colors.black87, fontSize: 15)),
+                  ],
+                ),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// --- 6. Auth Screens (Refined Placeholders) ---
+class LoginScreen extends StatelessWidget { const LoginScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Login')), body: Center(child: ElevatedButton(onPressed: () => Navigator.pushReplacementNamed(context, '/home'), style: ElevatedButton.styleFrom(minimumSize: const Size(200, 56)), child: const Text('Sign In')))); }
+class CreateAccountScreen extends StatelessWidget { const CreateAccountScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Create Account')), body: Center(child: ElevatedButton(onPressed: () => Navigator.pushNamed(context, '/verify'), style: ElevatedButton.styleFrom(minimumSize: const Size(200, 56)), child: const Text('Register')))); }
+class VerifyEmailScreen extends StatelessWidget { const VerifyEmailScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Verify Email')), body: Center(child: ElevatedButton(onPressed: () => Navigator.pushNamed(context, '/complete-profile'), style: ElevatedButton.styleFrom(minimumSize: const Size(200, 56)), child: const Text('Verify')))); }
+class CompleteProfileScreen extends StatelessWidget { const CompleteProfileScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Complete Profile')), body: Center(child: ElevatedButton(onPressed: () => Navigator.pushReplacementNamed(context, '/home'), style: ElevatedButton.styleFrom(minimumSize: const Size(200, 56)), child: const Text('Save & Continue')))); }
+
+// --- 7. Booking Details ---
+class BookingDetailsScreen extends StatelessWidget {
+  const BookingDetailsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Confirmation', style: TextStyle(fontWeight: FontWeight.bold))),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.check_circle_rounded, color: Colors.green, size: 100),
+              const SizedBox(height: 24),
+              const Text('Booking Successful!', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF002366))),
+              const SizedBox(height: 12),
+              const Text('Booking ID: VE-2026-45872', style: TextStyle(fontSize: 18, color: Colors.black54)),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false),
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF002366), minimumSize: const Size(double.infinity, 56)),
+                child: const Text('Back to Home', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

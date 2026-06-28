@@ -1,0 +1,26 @@
+[dir="rtl"] .page-sidebar {
+    right: 0;
+    left: auto;
+}
+
+[dir="rtl"] .page-body-wrapper .page-body {
+    margin-right: 255px;
+    margin-left: 0;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    float: right;
+    padding-left: 0.5rem;
+    padding-right: 0;
+}
+
+[dir="rtl"] .sidebar-menu .fa,
+[dir="rtl"] .sidebar-menu svg {
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+[dir="rtl"] .auto-translate-d {
+    left: 2%;
+    right: auto;
+}

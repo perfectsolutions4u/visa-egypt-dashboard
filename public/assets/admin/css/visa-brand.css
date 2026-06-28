@@ -1,0 +1,34 @@
+:root {
+    --visa-navy: #1B2A4A;
+    --visa-teal: #2EC4B6;
+    --visa-gold: #C9A227;
+    --theme-color: var(--visa-teal);
+}
+
+.btn-primary,
+.badge-primary {
+    background-color: var(--visa-navy) !important;
+    border-color: var(--visa-navy) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--visa-teal) !important;
+    border-color: var(--visa-teal) !important;
+}
+
+.page-sidebar .sidebar-menu > li > a.active,
+.page-sidebar .sidebar-menu > li > a:hover {
+    color: var(--visa-gold);
+}
+
+.sidebar-main-title h6 {
+    color: var(--visa-teal);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+}
+
+.card .card-header h5 {
+    color: var(--visa-navy);
+}
