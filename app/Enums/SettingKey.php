@@ -25,6 +25,8 @@ enum SettingKey: string
     case VISA_SUPPORT_TITLE = 'visa_support_title';
     case VISA_SUPPORT_SUBTITLE = 'visa_support_subtitle';
     case VISA_LOYALTY = 'visa_loyalty';
+    case VISA_ON_ARRIVAL = 'visa_on_arrival';
+    case APP_UPDATE = 'app_update';
 
     case COMPANY_LOCATION_URL = 'company_location_url';
     public static function all(): array

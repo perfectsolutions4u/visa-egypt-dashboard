@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/admin/css/admin.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}?ver=1.0.3">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/visa-editor.css') }}?ver=1.0.0">
     @if(app()->getLocale() === 'ar')
         <link rel="stylesheet" href="{{ asset('assets/admin/css/visa-rtl.css') }}">
     @endif
@@ -45,38 +46,19 @@
 @stack('js-upper')
 <!--script admin-->
 <script>window.supportedLocales = {!! collect(config('translatable.locales'))->toJson() !!} </script>
-<script src="{{ str(config('tinymce.sdk-url'))->replace('API_KEY', setting(\App\Enums\SettingKey::TINY_EDITOR->value, true)) }}" referrerpolicy="origin"></script>
 <script src="{{ asset('assets/admin/js/admin.js') }}?ver=1.1.0"></script>
+<script src="{{ asset('assets/admin/js/visa-editor.js') }}?ver=1.0.0"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
 
-{{--<script src="{{ asset('assets/admin/js/tinymce-jquery.js') }}?ver=1.0.0"></script>--}}
 @isset($dataTable)
     <x-dashboard.partials.delete-resource-modal />
     {!! $dataTable->scripts() !!}
 @endisset
 <script>
-    const tinymceInitEditor = async(ele) => {
-        await ele.tinymce({
-            relative_urls : false,
-            remove_script_host : false,
-            plugins: 'code anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-            toolbar: 'wordcount | code | forecolor backcolor undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        })
+    if (window.VisaEditor) {
+        window.VisaEditor.initAll({ height: 500 });
     }
-
-    // $('.code-editor-tiny').each(function(){
-    //     tinymceInitEditor($(this))
-    // })
-
-    tinymce.init({
-        relative_urls : false,
-        remove_script_host : false,
-        selector: '.code-editor-tiny',
-        height: 500,
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount code',
-        toolbar: 'wordcount | forecolor backcolor undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code',
-    });
 
     $('.auto-translate').each(function () {
         $(this).on('click', function () {
@@ -103,11 +85,6 @@
     $('.page-main-header .switch').on('click', function(){
         $('.dataTables_wrapper table.dataTable').css({width: '100% !important'})
     })
-
-    // $(`#en-title,#en-name`).on('keyup', function () {
-    //     let slug = slugify($(this).val())
-    //     $(`#slug`).val(slug)
-    // })
 
     $('.clear-app-cache').on('click', function (e) {
         e.preventDefault()

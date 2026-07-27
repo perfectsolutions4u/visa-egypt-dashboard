@@ -5,6 +5,7 @@ namespace App\Models\Visa;
 use App\Enums\Visa\VisaBookingStatus;
 use App\Enums\Visa\VisaServiceType;
 use App\Models\Client;
+use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,7 +63,8 @@ class VisaBooking extends Model
 
     public function program(): BelongsTo
     {
-        return $this->belongsTo(Program::class);
+        // Mobile "programs" are sourced from tours.
+        return $this->belongsTo(Tour::class, 'program_id');
     }
 
     public function servicePackage(): BelongsTo

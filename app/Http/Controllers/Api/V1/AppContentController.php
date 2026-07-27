@@ -8,6 +8,7 @@ use App\Models\Visa\MembershipTier;
 use App\Models\Visa\Offer;
 use App\Services\Visa\PoliciesContentService;
 use App\Services\Visa\SupportContentService;
+use App\Services\Visa\VisaOnArrivalContentService;
 use App\Traits\Response\HasApiResponse;
 use Illuminate\Http\Request;
 
@@ -15,40 +16,9 @@ class AppContentController extends Controller
 {
     use HasApiResponse;
 
-    private const ELIGIBLE_NATIONALITIES = [
-        'united states', 'usa', 'us', 'united kingdom', 'uk', 'canada', 'australia',
-        'germany', 'france', 'italy', 'spain', 'netherlands', 'belgium', 'japan',
-        'south korea', 'new zealand', 'switzerland', 'sweden', 'norway', 'denmark',
-        'egypt', 'egyptian', 'eu',
-    ];
-
-    public function visaOnArrival()
+    public function visaOnArrival(VisaOnArrivalContentService $content)
     {
-        return $this->send([
-            'title' => 'Visa On Arrival',
-            'subtitle' => 'Get your visa easily when you arrive in Egypt.',
-            'visa_fee_usd' => 30,
-            'stay_days' => 30,
-            'entry_type' => 'Single Entry Visa',
-            'features' => [
-                ['title' => 'No Pre-Approval Needed', 'description' => 'No documents submitted in advance.'],
-                ['title' => 'Pay at the Airport', 'description' => 'Pay in cash (USD) at the visa counter.'],
-                ['title' => 'Official & Secure', 'description' => 'Government authorized service.'],
-                ['title' => 'Quick & Easy Process', 'description' => 'Fast, simple and hassle-free process.'],
-            ],
-            'nationalities' => ['US', 'UK', 'CA', 'AU', 'EU', 'More'],
-            'required_documents' => [
-                ['title' => 'Valid Passport', 'description' => 'Must be valid for at least 6 months.'],
-                ['title' => 'Return Ticket', 'description' => 'Confirmed return or onward ticket.'],
-                ['title' => 'Visa Fee', 'description' => 'Pay 30 USD at the airport.'],
-            ],
-            'steps' => [
-                ['title' => 'Arrive in Egypt', 'description' => 'Land at any Egyptian international airport.'],
-                ['title' => 'Meet Our Representative', 'description' => 'Look for Visa Egypt representative.'],
-                ['title' => 'Visa Processing', 'description' => 'We assist you with the process.'],
-                ['title' => 'Receive Your Visa', 'description' => 'Get your visa and enjoy your stay!'],
-            ],
-        ]);
+        return $this->send($content->getForApi());
     }
 
     public function arrivalJourney()
@@ -81,22 +51,9 @@ class AppContentController extends Controller
         return $this->send($policies->get());
     }
 
-    public function visaEligibility(Request $request)
+    public function visaEligibility(Request $request, VisaOnArrivalContentService $content)
     {
-        $nationality = strtolower(trim((string) $request->query('nationality', '')));
-        $eligible = $nationality === '' || collect(self::ELIGIBLE_NATIONALITIES)
-            ->contains(fn ($n) => str_contains($nationality, $n) || str_contains($n, $nationality));
-
-        return $this->send([
-            'eligible' => $eligible,
-            'nationality' => $request->query('nationality'),
-            'visa_fee_usd' => 30,
-            'stay_days' => 30,
-            'entry_type' => 'Single Entry Visa',
-            'message' => $eligible
-                ? 'Great news! You can get Visa On Arrival when you arrive in Egypt.'
-                : 'Please contact support to confirm eligibility for your nationality.',
-        ]);
+        return $this->send($content->checkEligibility($request->query('nationality')));
     }
 
     public function additionalServices()

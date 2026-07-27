@@ -22,25 +22,31 @@
             <option value="" disabled @if(!$multible) selected @endif>--Select Option--</option>
             @foreach($options as $key => $option)
                 @php
-                    // For simple key-value arrays (like cities, trip types)
-                    $optValue = $key;
-                    $optLabel = $option;
+                    if ($trackBy && (is_object($option) || is_array($option))) {
+                        $optValue = data_get($option, $trackBy);
+                        $optLabel = $optionLable
+                            ? data_get($option, $optionLable)
+                            : $optValue;
+                    } else {
+                        $optValue = $key;
+                        $optLabel = $option;
+                    }
+
+                    $selectedValues = is_array($value) ? $value : [$value];
+                    $isSelected = $value !== null && in_array((string) $optValue, array_map('strval', $selectedValues), true);
                 @endphp
                 <option
-                    @if($value)
-                        @if($multible ?
-                            (is_array($value) && in_array($optValue, $value)) :
-                             $value == $optValue)
-                            selected
-                        @endif
-                    @endif
+                    @if($isSelected) selected @endif
                     value="{{ $optValue }}">
-                    {{ Str::headline($optLabel) }}
+                    {{ $trackBy ? $optLabel : Str::headline((string) $optLabel) }}
                 </option>
             @endforeach
         </select>
         @if($errorKey)
             @error($errorKey)
+            <span class="d-block text-danger">{{ $message }}</span>
+            @enderror
+            @error($errorKey.'.*')
             <span class="d-block text-danger">{{ $message }}</span>
             @enderror
         @endif

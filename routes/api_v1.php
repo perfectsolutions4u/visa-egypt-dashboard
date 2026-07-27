@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\V1\TrackingController;
 use App\Http\Controllers\Api\V1\VehicleController;
 use App\Http\Controllers\Api\V1\VisaBookingController;
 use App\Http\Controllers\Api\V1\VisaSettingController;
+use App\Http\Controllers\Api\V1\AppUpdateSettingController;
+use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -31,11 +33,17 @@ return function (string $namePrefix = 'v1.'): void {
 
             // Public content
             Route::get('programs', [ProgramController::class, 'index'])->name('programs.index');
-            Route::get('programs/{program:slug}', [ProgramController::class, 'show'])->name('programs.show');
+            Route::get('programs/{slug}', [ProgramController::class, 'show'])->name('programs.show');
+
             Route::get('service-packages', [ServicePackageController::class, 'index'])->name('service-packages.index');
             Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
             Route::get('offers', [OfferController::class, 'index'])->name('offers.index');
             Route::get('settings/visa', [VisaSettingController::class, 'index'])->name('settings.visa');
+            Route::get('settings/app-update', [AppUpdateSettingController::class, 'index'])->name('settings.app-update');
+            // Public media proxy (works with Flutter web CORS; avoids broken public/storage symlink)
+            Route::get('media/{path}', [MediaController::class, 'show'])
+                ->where('path', '.*')
+                ->name('media.show');
             Route::get('content/visa-on-arrival', [AppContentController::class, 'visaOnArrival'])->name('content.visa-on-arrival');
             Route::get('content/arrival-journey', [AppContentController::class, 'arrivalJourney'])->name('content.arrival-journey');
             Route::get('content/support', [AppContentController::class, 'support'])->name('content.support');

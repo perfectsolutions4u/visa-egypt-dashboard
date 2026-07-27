@@ -21,7 +21,11 @@ class PermittedMiddleware
         try {
             $permission = Str::of($request->route()->getName())
                 ->remove('dashboard.')
+                ->replace('app-update-settings.', 'visa-settings.')
                 ->replace('loyalty-settings.', 'visa-settings.')
+                ->replace('visa-on-arrival.', 'visa-settings.')
+                ->replace('visa-nationalities.', 'visa-settings.')
+                ->replace('policies.', 'visa-settings.')
                 ->replace('toggle-active', 'edit')
                 ->replace('toggle-featured', 'edit')
                 ->replace('store', 'create')
@@ -29,6 +33,13 @@ class PermittedMiddleware
                 ->replace('update', 'edit')
                 ->replace('destroy', 'delete')
                 ->replace('manage', 'list');
+
+            $permission = (string) $permission;
+
+            // Mobile content screens share the single visa-settings.edit permission.
+            if (str_starts_with($permission, 'visa-settings.') && $permission !== 'visa-settings.edit') {
+                $permission = 'visa-settings.edit';
+            }
 
         } catch (\Exception $exception) {
             report($exception);

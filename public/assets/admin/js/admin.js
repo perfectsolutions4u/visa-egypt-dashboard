@@ -21588,12 +21588,14 @@ $(document).ready(function () {
     })
 
 
-    const createEditor = (selector = '.code-editor') => {
-        $(selector).tinymce({
-            selector: '.code-editor',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        })
+    const createEditor = (selector = '.code-editor-tiny, .code-editor') => {
+        if (window.VisaEditor) {
+            window.VisaEditor.init(selector, { height: 500 });
+            return;
+        }
+        if (typeof window.tinymce !== 'undefined' && window.tinymce.init) {
+            window.tinymce.init({ selector: selector, height: 500 });
+        }
     }
     try {
         createEditor()
@@ -21657,18 +21659,15 @@ Enable This Season
         originalContainer.parent().append(`<div class="row color-picks">${element}</div>`)
 
         let recentlyCreated = originalContainer.parent().children('.color-picks').last()
-        recentlyCreated.find('.tox.tox-tinymce').remove()
+        recentlyCreated.find('.visa-editor, .tox.tox-tinymce').remove()
+        recentlyCreated.find('textarea.code-editor, textarea.code-editor-tiny').each(function () {
+            this.dataset.visaEditorMounted = '';
+            this._visaEditor = null;
+            this.style.display = '';
+        });
         recentlyCreated.find('input,textarea').val('')
         setTimeout(() => {
-            tinymce.init({
-                relative_urls : false,
-                remove_script_host : false,
-                selector: '.code-editor-tiny',
-                height: 500,
-                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                toolbar: 'forecolor backcolor undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-            });
-            // $('.code-editor').hide()
+            createEditor('.code-editor-tiny, .code-editor');
         }, 250);
         $('.color-box input').change(function () {
             $(this).parent().find('span').css("background-color", $(this).val())

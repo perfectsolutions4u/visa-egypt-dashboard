@@ -35,7 +35,8 @@ class CreateVisaBookingRequest extends FormRequest
             'arrival_time' => ['nullable', 'date_format:H:i'],
             'meeting_point' => ['nullable', 'string', 'max:125'],
             'destination' => ['nullable', 'string', 'max:125'],
-            'program_id' => ['nullable', 'exists:programs,id'],
+            'program_id' => ['nullable', 'exists:tours,id'],
+
             'service_package_id' => ['nullable', 'exists:service_packages,id'],
             'vehicle_id' => ['nullable', 'exists:vehicles,id'],
             'special_requests' => ['nullable', 'array'],

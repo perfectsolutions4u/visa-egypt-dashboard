@@ -160,6 +160,19 @@ class VisaMobileApi extends Controller
 
     /**
      * @OA\Get(
+     *     path="/v1/settings/app-update",
+     *     tags={"Visa Mobile API"},
+     *     summary="Mobile app update config (version, force flag, store links)",
+     *     @OA\Parameter(name="platform", in="query", required=false, @OA\Schema(type="string", enum={"android","ios"})),
+     *     @OA\Parameter(name="version", in="query", required=false, @OA\Schema(type="string", example="1.0.0")),
+     *     @OA\Parameter(name="build", in="query", required=false, @OA\Schema(type="integer", example=1)),
+     *     @OA\Response(response=200, description="Update settings and optional update_required decision")
+     * )
+     */
+    public function appUpdateSettings() {}
+
+    /**
+     * @OA\Get(
      *     path="/v1/bookings",
      *     tags={"Visa Mobile API"},
      *     summary="My bookings",

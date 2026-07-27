@@ -9,6 +9,7 @@ $publicGets = [
     'vehicles',
     'offers',
     'settings/visa',
+    'settings/app-update',
 ];
 
 foreach ($prefixes as $prefix) {

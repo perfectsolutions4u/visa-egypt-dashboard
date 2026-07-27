@@ -21,7 +21,7 @@
                 <div class="card tab2-card">
                     <div class="card-body needs-validation">
                         <x-dashboard.form.multi-tab-card
-                            :tabs="['basic','notifications', 'social-links', 'company-team', 'tiny-editor', 'debugging', 'visa-egypt']"
+                            :tabs="['basic','notifications', 'social-links', 'company-team', 'visa-editor', 'debugging', 'visa-egypt']"
                             tab-id="settings">
 
                             <div class="tab-pane fade active show"
@@ -190,11 +190,9 @@
                                  id="{{ 'settings-4' }}" role="tabpanel"
                                  aria-labelledby="{{ 'settings-3' }}-tab">
 
-                                <x-dashboard.form.input-text error-key="{{\App\Enums\SettingKey::TINY_EDITOR->value}}"
-                                                             :value="old(\App\Enums\SettingKey::TINY_EDITOR->value. '.0',
-                                                              $settings->firstWhere('option_key', \App\Enums\SettingKey::TINY_EDITOR->value)?->option_value[0] ?? '')"
-                                                             name="{{\App\Enums\SettingKey::TINY_EDITOR->value}}[]" id="{{\App\Enums\SettingKey::TINY_EDITOR->value}}"
-                                                             label-title="Tiny Editor Key"/>
+                                <div class="alert alert-info mb-0">
+                                    TinyMCE was removed. The dashboard now uses the built-in Visa Editor (no API key required).
+                                </div>
 
                             </div>
 

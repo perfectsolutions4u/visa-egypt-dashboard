@@ -106,7 +106,18 @@
             <x-dashboard.sidebar.single-link :permissions="['visa-payments.list']" title="Visa Payments" link="{{ route('dashboard.visa-payments.index') }}" icon="credit-card"/>
 
             <x-dashboard.sidebar.single-link :permissions="['visa-settings.edit']" title="App Policies" link="{{ route('dashboard.policies.edit') }}" icon="file-text"/>
+            <x-dashboard.sidebar.link-with-child
+                title="Visa On Arrival"
+                icon="globe"
+                :permissions="['visa-settings.edit']"
+                :children="[
+                    ['title' => 'Page Content', 'link' => route('dashboard.visa-on-arrival.edit'), 'permissions' => ['visa-settings.edit'] ],
+                    ['title' => 'Eligible Nationalities', 'link' => route('dashboard.visa-nationalities.index'), 'permissions' => ['visa-settings.edit'] ],
+                    ['title' => 'Add Nationality', 'link' => route('dashboard.visa-nationalities.create'), 'permissions' => ['visa-settings.edit'] ],
+                ]"
+            />
             <x-dashboard.sidebar.single-link :permissions="['visa-settings.edit']" title="Loyalty Program" link="{{ route('dashboard.loyalty-settings.edit') }}" icon="star"/>
+            <x-dashboard.sidebar.single-link :permissions="['visa-settings.edit']" title="App Update" link="{{ route('dashboard.app-update-settings.edit') }}" icon="download"/>
             <x-dashboard.sidebar.single-link :permissions="['visa-settings.edit']" title="Mobile Support" link="{{ route('dashboard.visa-settings.edit') }}" icon="headphones"/>
 
             <x-dashboard.sidebar.link-with-child
