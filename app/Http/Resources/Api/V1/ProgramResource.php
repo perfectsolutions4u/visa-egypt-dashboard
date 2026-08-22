@@ -45,7 +45,7 @@ class ProgramResource extends JsonResource
         return [
             'id' => $tour->id,
             'name' => $tour->title,
-            'slug' => $tour->slug,
+            'slug' => $tour->slug ?: Str::slug($tour->title).'-'.$tour->id,
             'duration' => $duration,
             'cities' => $tour->relationLoaded('destinations')
                 ? $tour->destinations->pluck('title')->filter()->values()->all()

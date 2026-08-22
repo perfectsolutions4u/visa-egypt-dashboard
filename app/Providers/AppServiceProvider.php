@@ -14,6 +14,7 @@ use Illuminate\Notifications\ChannelManager;
 use App\Services\Translation\Google\FreeTranslator;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,7 +50,21 @@ class AppServiceProvider extends ServiceProvider
         File::macro('isEmptyDir', function ($path) {
             return count(glob("$path/*")) === 0;
         });
-//        Str::macro('htmlEntityDecode', fn($value) => Str::of(html_entity_decode($value)));
-//        Stringable::macro('htmlEntityDecode', fn() => new Stringable(html_entity_decode($this->value)));
+
+        // Multipart uploads (Flutter web) sometimes omit the Authorization header.
+        Sanctum::getAccessTokenFromRequestUsing(function ($request) {
+            $bearer = $request->bearerToken();
+            if (filled($bearer)) {
+                return $bearer;
+            }
+
+            $header = $request->header('X-Authorization');
+            if (is_string($header) && str_starts_with($header, 'Bearer ')) {
+                return substr($header, 7);
+            }
+
+            $fromInput = $request->input('access_token');
+            return filled($fromInput) ? (string) $fromInput : null;
+        });
     }
 }

@@ -35,13 +35,32 @@ class ProfileController extends Controller
     public function uploadPhoto(UploadProfilePhotoRequest $request)
     {
         $client = $request->user();
+        if (! $client) {
+            return $this->send(message: 'Please sign in again.', statusCode: 401);
+        }
+
+        $file = $request->file('photo');
+        $imageInfo = @getimagesize($file->getRealPath());
+        if ($imageInfo === false) {
+            return $this->send(message: 'Please choose a JPG, PNG, or WEBP photo.', statusCode: 422);
+        }
+
+        $extension = match ($imageInfo[2] ?? null) {
+            IMAGETYPE_PNG => 'png',
+            IMAGETYPE_WEBP => 'webp',
+            default => 'jpg',
+        };
 
         if ($client->image && str_starts_with($client->image, '/storage/')) {
             $oldPath = str_replace('/storage/', '', $client->image);
             Storage::disk('public')->delete($oldPath);
         }
 
-        $path = $request->file('photo')->store('clients/photos', 'public');
+        $path = $file->storeAs(
+            'clients/photos',
+            uniqid('client_', true).'.'.$extension,
+            'public'
+        );
         $url = Storage::url($path);
 
         $client->update(['image' => $url]);

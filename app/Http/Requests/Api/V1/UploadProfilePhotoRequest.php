@@ -9,10 +9,15 @@ class UploadProfilePhotoRequest extends FormRequest
 {
     use RequestValidationErrorResponse;
 
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
-            'photo' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'photo' => ['required', 'file', 'max:5120'],
         ];
     }
 }
