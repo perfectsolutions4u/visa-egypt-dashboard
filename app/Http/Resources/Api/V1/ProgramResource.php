@@ -29,6 +29,7 @@ class ProgramResource extends JsonResource
             'hero_image' => $this->hero_image,
             'gallery' => is_array($this->gallery ?? null) ? array_values($this->gallery) : [],
             'is_best_seller' => $this->is_best_seller,
+            'is_favorited' => (bool) $this->is_favorited,
         ];
     }
 
@@ -38,8 +39,13 @@ class ProgramResource extends JsonResource
         $tour = $this->resource;
 
         $duration = $tour->duration;
-        if (! $duration && $tour->duration_in_days) {
-            $duration = $tour->duration_in_days.' Days';
+        $dayCount = $tour->relationLoaded('days') ? $tour->days->count() : 0;
+        if ($dayCount > 0) {
+            $duration = $dayCount === 1 ? '1 Day' : $dayCount.' Days';
+        } elseif (! $duration && $tour->duration_in_days) {
+            $duration = $tour->duration_in_days === 1
+                ? '1 Day'
+                : $tour->duration_in_days.' Days';
         }
 
         return [
@@ -58,6 +64,7 @@ class ProgramResource extends JsonResource
             'hero_image' => ClientResource::publicImageUrl($tour->featured_image, $request),
             'gallery' => $this->mapGallery($tour->gallery, $request),
             'is_best_seller' => (bool) $tour->featured,
+            'is_favorited' => (bool) $tour->getAttribute('is_favorited'),
         ];
     }
 

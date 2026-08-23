@@ -23,16 +23,34 @@ class ProgramController extends Controller
             $query->where('featured', true);
         }
 
-        return $this->send(ProgramResource::collection($query->get()));
+        $tours = $query->get();
+        $this->markFavorites($tours, $request);
+
+        return $this->send(ProgramResource::collection($tours));
     }
 
-    public function show(string $slug)
+    public function show(Request $request, string $slug)
     {
         $tour = Tour::query()
             ->with(['destinations', 'days'])
             ->where('slug', $slug)
             ->firstOrFail();
 
+        $this->markFavorites(collect([$tour]), $request);
+
         return $this->send(new ProgramResource($tour));
+    }
+
+    private function markFavorites($tours, Request $request): void
+    {
+        $client = $request->user('sanctum') ?? auth('sanctum')->user();
+        if (! $client || ! method_exists($client, 'toursWishlist')) {
+            return;
+        }
+
+        $ids = $client->toursWishlist()->pluck('tours.id')->all();
+        foreach ($tours as $tour) {
+            $tour->setAttribute('is_favorited', in_array($tour->id, $ids, true));
+        }
     }
 }

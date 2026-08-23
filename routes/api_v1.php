@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AppContentController;
+use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\LoyaltyController;
 use App\Http\Controllers\Api\V1\MembershipController;
@@ -91,6 +92,10 @@ return function (string $namePrefix = 'v1.'): void {
                 Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
                 Route::patch('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
                 Route::patch('notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+                Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+                Route::get('favorites/ids', [FavoriteController::class, 'ids'])->name('favorites.ids');
+                Route::post('favorites/{program}/toggle', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
             });
         });
 };

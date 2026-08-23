@@ -9,6 +9,7 @@ use App\Http\Resources\Api\V1\VisaBookingResource;
 use App\Models\Visa\VisaBooking;
 use App\Services\Visa\BookingRefGenerator;
 use App\Traits\Response\HasApiResponse;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class VisaBookingController extends Controller
@@ -30,7 +31,7 @@ class VisaBookingController extends Controller
         $data = $request->validated();
         $client = $request->user();
 
-        $booking = VisaBooking::create(array_merge($data, [
+        $payload = array_merge($data, [
             'client_id' => $client->id,
             'booking_ref' => $refs->generate(),
             'status' => VisaBookingStatus::PENDING,
@@ -38,7 +39,21 @@ class VisaBookingController extends Controller
             'contact_whatsapp' => $data['contact_whatsapp'] ?? $client->whatsapp,
             'nationality' => $data['nationality'] ?? $client->nationality,
             'travelers_count' => $data['travelers_count'] ?? 1,
-        ]));
+        ]);
+
+        try {
+            $booking = VisaBooking::create($payload);
+        } catch (QueryException $exception) {
+            if (empty($payload['program_id']) || ! str_contains($exception->getMessage(), 'program_id')) {
+                throw $exception;
+            }
+
+            $metadata = is_array($payload['metadata'] ?? null) ? $payload['metadata'] : [];
+            $metadata['tour_id'] = $payload['program_id'];
+            $payload['metadata'] = $metadata;
+            unset($payload['program_id']);
+            $booking = VisaBooking::create($payload);
+        }
 
         return $this->send(new VisaBookingResource($booking->load(['program', 'servicePackage'])), 'Booking created.', 201);
     }
