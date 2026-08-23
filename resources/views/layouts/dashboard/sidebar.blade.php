@@ -381,6 +381,7 @@
 {{--                ]"--}}
 {{--            />--}}
 
+            <x-dashboard.sidebar.single-link :permissions="['settings.show']" title="Database Backup" link="{{ route('dashboard.database-backups.index') }}" icon="database" />
             <x-dashboard.sidebar.single-link :permissions="['settings.show']" title="Settings" link="{{ route('dashboard.settings.show') }}" icon="settings" />
 
 

@@ -41,6 +41,13 @@ class PermittedMiddleware
                 $permission = 'visa-settings.edit';
             }
 
+            if (str_starts_with($permission, 'database-backups.')) {
+                $permission = in_array($permission, [
+                    'database-backups.list',
+                    'database-backups.download',
+                ], true) ? 'settings.show' : 'settings.edit';
+            }
+
         } catch (\Exception $exception) {
             report($exception);
             $permission = '';

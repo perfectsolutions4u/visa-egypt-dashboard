@@ -16,6 +16,7 @@ use App\Http\Controllers\Dashboard\LocationController;
 use App\Http\Controllers\Dashboard\MainController;
 use App\Http\Controllers\Dashboard\PageController;
 use App\Http\Controllers\Dashboard\RoleController;
+use App\Http\Controllers\Dashboard\DatabaseBackupController;
 use App\Http\Controllers\Dashboard\SettingController;
 use App\Http\Controllers\Dashboard\SitemapController;
 use App\Http\Controllers\Dashboard\TourController;
@@ -144,6 +145,16 @@ Route::group([
         Route::get('show', [SettingController::class, 'show'])->name('show');
         Route::put('update', [SettingController::class, 'update'])->name('update');
     });
+
+    Route::get('database-backups', [DatabaseBackupController::class, 'index'])->name('database-backups.index');
+    Route::post('database-backups', [DatabaseBackupController::class, 'store'])->name('database-backups.store');
+    Route::get('database-backups/{filename}/download', [DatabaseBackupController::class, 'download'])
+        ->where('filename', '[A-Za-z0-9._-]+')
+        ->name('database-backups.download');
+    Route::post('database-backups/restore', [DatabaseBackupController::class, 'restore'])->name('database-backups.restore');
+    Route::delete('database-backups/{filename}', [DatabaseBackupController::class, 'destroy'])
+        ->where('filename', '[A-Za-z0-9._-]+')
+        ->name('database-backups.destroy');
 
     // Visa Egypt Management
     Route::resource('programs', ProgramController::class)->except('show');
