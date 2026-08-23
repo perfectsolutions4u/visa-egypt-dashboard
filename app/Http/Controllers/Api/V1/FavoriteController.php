@@ -21,7 +21,7 @@ class FavoriteController extends Controller
 
         $tours->each(fn (Tour $tour) => $tour->setAttribute('is_favorited', true));
 
-        return $this->send(ProgramResource::collection($tours));
+        return $this->send(ProgramResource::collection($tours)->resolve($request));
     }
 
     public function ids(Request $request)
