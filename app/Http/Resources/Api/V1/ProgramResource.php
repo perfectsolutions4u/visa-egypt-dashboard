@@ -28,6 +28,7 @@ class ProgramResource extends JsonResource
             'starting_price' => $this->starting_price,
             'hero_image' => $this->hero_image,
             'gallery' => is_array($this->gallery ?? null) ? array_values($this->gallery) : [],
+            'options' => is_array($this->options ?? null) ? array_values($this->options) : [],
             'is_best_seller' => $this->is_best_seller,
             'is_favorited' => (bool) $this->is_favorited,
         ];
@@ -63,6 +64,7 @@ class ProgramResource extends JsonResource
             'starting_price' => $tour->start_from,
             'hero_image' => ClientResource::publicImageUrl($tour->featured_image, $request),
             'gallery' => $this->mapGallery($tour->gallery, $request),
+            'options' => $this->mapOptions($tour),
             'is_best_seller' => (bool) $tour->featured,
             'is_favorited' => (bool) $tour->getAttribute('is_favorited'),
         ];
@@ -92,6 +94,40 @@ class ProgramResource extends JsonResource
             ->filter()
             ->unique()
             ->values()
+            ->all();
+    }
+
+    protected function mapOptions(Tour $tour): array
+    {
+        if (! $tour->relationLoaded('options')) {
+            return [];
+        }
+
+        return $tour->options
+            ->filter(fn ($option) => filled($option->name))
+            ->values()
+            ->map(function ($option) {
+                $description = trim(html_entity_decode(strip_tags((string) $option->description)));
+                if (in_array($description, ['', '.', '-'], true)) {
+                    $description = null;
+                }
+
+                $groups = $option->pricing_groups;
+                if ($groups instanceof Collection) {
+                    $groups = $groups->values()->all();
+                } elseif (! is_array($groups)) {
+                    $groups = [];
+                }
+
+                return [
+                    'id' => $option->id,
+                    'name' => $option->name,
+                    'description' => $description,
+                    'adult_price' => (float) $option->adult_price,
+                    'child_price' => (float) $option->child_price,
+                    'pricing_groups' => array_values($groups),
+                ];
+            })
             ->all();
     }
 

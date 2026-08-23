@@ -16,6 +16,7 @@ class VisaPermissionSeeder extends Seeder
             'guest-requests' => ['list', 'show', 'advance', 'note'],
             'programs' => ['list', 'create', 'edit', 'delete'],
             'service-packages' => ['list', 'create', 'edit', 'delete'],
+            'additional-services' => ['list', 'create', 'edit', 'delete'],
             'vehicles' => ['list', 'create', 'edit', 'delete'],
             'staff' => ['list', 'create', 'edit', 'delete'],
             'offers' => ['list', 'create', 'edit', 'delete'],

@@ -15,7 +15,7 @@ class ProgramController extends Controller
     public function index(Request $request)
     {
         $query = Tour::query()
-            ->with(['destinations', 'days'])
+            ->with(['destinations', 'days', 'options'])
             ->orderBy('display_order')
             ->orderBy('id');
 
@@ -32,7 +32,7 @@ class ProgramController extends Controller
     public function show(Request $request, string $slug)
     {
         $tour = Tour::query()
-            ->with(['destinations', 'days'])
+            ->with(['destinations', 'days', 'options'])
             ->where('slug', $slug)
             ->firstOrFail();
 

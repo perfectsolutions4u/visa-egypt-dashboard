@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Visa\OfferServiceTarget;
 use App\Enums\Visa\StaffType;
 use App\Enums\Visa\VisaBookingStatus;
 use App\Enums\Visa\VisaServiceType;
 use App\Models\Client;
+use App\Models\Visa\AdditionalService;
 use App\Models\Visa\AppNotification;
 use App\Models\Visa\MembershipTier;
-use App\Models\Visa\Offer;
 use App\Models\Visa\Program;
 use App\Models\Visa\ServicePackage;
 use App\Models\Visa\Staff;
@@ -98,22 +97,7 @@ class VisaEgyptSeeder extends Seeder
             Vehicle::updateOrCreate(['name' => $v['name']], array_merge($v, ['is_active' => true]));
         }
 
-        $addonOffers = [
-            ['title' => 'Egypt Tourist SIM Card', 'description' => 'Stay connected — 40GB data, ready at airport.', 'discount_percent' => 15],
-            ['title' => 'Airport Transfer Add-on', 'description' => 'Private transfer within Cairo from 25 USD.', 'discount_percent' => 25],
-            ['title' => 'Nile Dinner Cruise', 'description' => 'Open buffet, live show, hotel pickup.', 'discount_percent' => 75],
-        ];
-        foreach ($addonOffers as $offer) {
-            Offer::updateOrCreate(
-                ['title' => $offer['title']],
-                array_merge($offer, [
-                    'service_target' => OfferServiceTarget::MEET_ASSIST,
-                    'is_active' => true,
-                    'active_from' => now()->subDay(),
-                    'active_to' => now()->addYear(),
-                ])
-            );
-        }
+        $this->seedAdditionalServices();
 
         Staff::updateOrCreate(
             ['full_name' => 'Ahmed Representative', 'type' => StaffType::REPRESENTATIVE->value],
@@ -320,6 +304,82 @@ class VisaEgyptSeeder extends Seeder
                     'title' => $sample['title'],
                 ],
                 $sample + ['client_id' => $client->id],
+            );
+        }
+    }
+
+    private function seedAdditionalServices(): void
+    {
+        $services = [
+            [
+                'title' => 'Egypt Tourist SIM Card',
+                'description' => 'Stay connected during your trip with our tourist SIM card.',
+                'price' => 15,
+                'price_from' => false,
+                'icon' => 'sim_card',
+                'accent_color' => '#F26522',
+                'features' => [
+                    '40 GB Data',
+                    'Instant Activation',
+                    'Ready at Airport',
+                    'No International Calls',
+                ],
+                'sort_order' => 1,
+            ],
+            [
+                'title' => 'Airport Transfer',
+                'description' => 'Private transfer from Cairo Airport to any destination within Cairo.',
+                'price' => 25,
+                'price_from' => true,
+                'icon' => 'local_taxi',
+                'accent_color' => '#0E7C7B',
+                'features' => [
+                    'Private Car',
+                    'Professional Driver',
+                    'Meet & Greet',
+                ],
+                'sort_order' => 2,
+            ],
+            [
+                'title' => 'Hotel Booking',
+                'description' => 'Book your hotel starting from 3-star hotels with the best available rates.',
+                'price' => 35,
+                'price_from' => true,
+                'icon' => 'apartment',
+                'accent_color' => '#D4A017',
+                'features' => [
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars',
+                    'Best Available Rates',
+                    'Flexible Options',
+                ],
+                'sort_order' => 3,
+            ],
+            [
+                'title' => 'Nile Dinner Cruise',
+                'description' => 'Enjoy a magical evening on the Nile. Includes hotel pickup and drop-off.',
+                'price' => 75,
+                'price_from' => false,
+                'icon' => 'directions_boat',
+                'accent_color' => '#D32027',
+                'features' => [
+                    'Hotel Pickup',
+                    'Hotel Drop-off',
+                    'Open Buffet Dinner',
+                    'Live Show',
+                    'Belly Dance & Tanoura Show',
+                    '2 Hours Cruise',
+                    'Available Daily',
+                ],
+                'sort_order' => 4,
+            ],
+        ];
+
+        foreach ($services as $service) {
+            AdditionalService::updateOrCreate(
+                ['title' => $service['title']],
+                array_merge($service, ['currency' => 'USD', 'is_active' => true])
             );
         }
     }

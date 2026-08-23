@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\V1\OfferResource;
+use App\Models\Visa\AdditionalService;
 use App\Models\Visa\MembershipTier;
 use App\Models\Visa\Offer;
+use Illuminate\Support\Facades\Schema;
 use App\Services\Visa\PoliciesContentService;
 use App\Services\Visa\SupportContentService;
 use App\Services\Visa\VisaOnArrivalContentService;
@@ -58,12 +59,38 @@ class AppContentController extends Controller
 
     public function additionalServices()
     {
+        if (Schema::hasTable('additional_services')) {
+            $services = AdditionalService::activeOrdered()
+                ->map(fn (AdditionalService $service) => $service->toApiArray())
+                ->values()
+                ->all();
+
+            if ($services !== []) {
+                return $this->send($services);
+            }
+        }
+
+        // Production may still be on the older offers table.
         $offers = Offer::query()
             ->where('is_active', true)
             ->latest()
-            ->get();
+            ->get()
+            ->map(fn (Offer $offer) => [
+                'id' => $offer->id,
+                'title' => $offer->title,
+                'description' => $offer->description,
+                'price' => (float) ($offer->discount_percent ?? 0),
+                'currency' => 'USD',
+                'price_from' => false,
+                'icon' => null,
+                'accent_color' => null,
+                'features' => [],
+                'sort_order' => 0,
+            ])
+            ->values()
+            ->all();
 
-        return $this->send(OfferResource::collection($offers));
+        return $this->send($offers);
     }
 
     public function membershipPlans()

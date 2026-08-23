@@ -51,6 +51,16 @@
             />
 
             <x-dashboard.sidebar.link-with-child
+                title="Additional Services"
+                icon="plus-square"
+                :permissions="['additional-services.list','additional-services.create','additional-services.edit','additional-services.delete']"
+                :children="[
+                    ['title' => 'Services', 'link' => route('dashboard.additional-services.index'), 'permissions' => ['additional-services.list','additional-services.edit','additional-services.delete'] ],
+                    ['title' => 'Create Service', 'link' => route('dashboard.additional-services.create'), 'permissions' => ['additional-services.create'] ],
+                ]"
+            />
+
+            <x-dashboard.sidebar.link-with-child
                 title="Vehicles"
                 icon="truck"
                 :permissions="['vehicles.list','vehicles.create','vehicles.edit','vehicles.delete']"

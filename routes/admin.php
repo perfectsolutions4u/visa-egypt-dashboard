@@ -36,6 +36,7 @@ use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\HotelRoomBookingController;
 use App\Http\Controllers\Dashboard\Visa\ProgramController;
 use App\Http\Controllers\Dashboard\Visa\ServicePackageController;
+use App\Http\Controllers\Dashboard\Visa\AdditionalServiceController;
 use App\Http\Controllers\Dashboard\Visa\VehicleController;
 use App\Http\Controllers\Dashboard\Visa\StaffController;
 use App\Http\Controllers\Dashboard\Visa\OfferController;
@@ -159,6 +160,7 @@ Route::group([
     // Visa Egypt Management
     Route::resource('programs', ProgramController::class)->except('show');
     Route::resource('service-packages', ServicePackageController::class)->except('show');
+    Route::resource('additional-services', AdditionalServiceController::class)->except('show');
     Route::resource('vehicles', VehicleController::class)->except('show');
     Route::resource('staff', StaffController::class)->except('show');
     Route::resource('offers', OfferController::class)->except('show');
