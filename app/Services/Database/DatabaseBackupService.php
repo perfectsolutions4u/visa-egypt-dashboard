@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
+use Throwable;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DatabaseBackupService
@@ -272,11 +273,26 @@ class DatabaseBackupService
         }
 
         $string = (string) $value;
-        if ($string !== '' && ! mb_check_encoding($string, 'UTF-8')) {
+        if ($this->shouldHexEncode($string)) {
             return '0x'.bin2hex($string);
         }
 
         return DB::getPdo()->quote($string);
+    }
+
+    private function shouldHexEncode(string $value): bool
+    {
+        return $value !== '' && (
+            ! mb_check_encoding($value, 'UTF-8')
+            || str_contains($value, '\\')
+            || str_contains($value, '--')
+            || str_contains($value, '/*')
+            || str_contains($value, ';')
+            || str_contains($value, "'")
+            || str_contains($value, "\n")
+            || str_contains($value, "\r")
+            || str_contains($value, "\0")
+        );
     }
 
     /**
@@ -313,16 +329,116 @@ class DatabaseBackupService
 
     private function restoreSql(string $sql): void
     {
+        try {
+            if ($this->restoreWithMysqlClient($sql)) {
+                return;
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+        }
+
         DB::connection()->unsetEventDispatcher();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::statement('SET UNIQUE_CHECKS=0');
+        DB::statement("SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO'");
 
         try {
             foreach ($this->splitStatements($sql) as $statement) {
                 DB::unprepared($statement);
             }
         } finally {
+            DB::statement('SET UNIQUE_CHECKS=1');
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
+    }
+
+    private function restoreWithMysqlClient(string $sql): bool
+    {
+        $binary = $this->mysqlBinary();
+        if ($binary === null) {
+            return false;
+        }
+
+        $config = config('database.connections.'.config('database.default'));
+        $defaults = tempnam(sys_get_temp_dir(), 'mycnf');
+        if ($defaults === false) {
+            return false;
+        }
+
+        $password = str_replace(['\\', '"'], ['\\\\', '\\"'], (string) ($config['password'] ?? ''));
+        $contents = "[client]\n"
+            ."host=\"{$config['host']}\"\n"
+            ."port=\"{$config['port']}\"\n"
+            ."user=\"{$config['username']}\"\n"
+            ."password=\"{$password}\"\n";
+
+        file_put_contents($defaults, $contents);
+
+        try {
+            $command = [
+                $binary,
+                '--defaults-extra-file='.$defaults,
+                '--default-character-set=utf8mb4',
+                $config['database'],
+            ];
+
+            $process = @proc_open(
+                $this->commandLine($command),
+                [
+                    0 => ['pipe', 'r'],
+                    1 => ['pipe', 'w'],
+                    2 => ['pipe', 'w'],
+                ],
+                $pipes,
+                null,
+                null
+            );
+
+            if (! is_resource($process)) {
+                return false;
+            }
+
+            fwrite($pipes[0], $sql);
+            fclose($pipes[0]);
+            $stderr = stream_get_contents($pipes[2]) ?: '';
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            $exit = proc_close($process);
+
+            if ($exit !== 0) {
+                throw new RuntimeException(trim($stderr) !== '' ? $stderr : 'MySQL restore command failed.');
+            }
+
+            return true;
+        } finally {
+            @unlink($defaults);
+        }
+    }
+
+    /**
+     * @param list<string> $command
+     */
+    private function commandLine(array $command): string
+    {
+        return implode(' ', array_map('escapeshellarg', $command));
+    }
+
+    private function mysqlBinary(): ?string
+    {
+        $configured = env('MYSQL_BINARY');
+        if (is_string($configured) && $configured !== '' && is_file($configured)) {
+            return $configured;
+        }
+
+        $finder = PHP_OS_FAMILY === 'Windows' ? 'where' : 'which';
+        $result = trim((string) @shell_exec($finder.' mysql'));
+        if ($result === '') {
+            return null;
+        }
+
+        $first = strtok($result, "\r\n");
+
+        return $first !== false && $first !== '' ? $first : null;
     }
 
     /**
@@ -340,14 +456,46 @@ class DatabaseBackupService
             $char = $sql[$i];
             $next = $i + 1 < $length ? $sql[$i + 1] : '';
 
-            if (! $inString && $char === '-' && $next === '-') {
+            if ($inString) {
+                $buffer .= $char;
+
+                if ($quote !== '`' && $char === '\\' && $next !== '') {
+                    $buffer .= $next;
+                    $i++;
+                    continue;
+                }
+
+                if ($char === $quote) {
+                    if ($next === $quote) {
+                        $buffer .= $next;
+                        $i++;
+                        continue;
+                    }
+                    $inString = false;
+                    $quote = '';
+                }
+
+                continue;
+            }
+
+            if ($char === '-' && $next === '-') {
+                $after = $i + 2 < $length ? $sql[$i + 2] : '';
+                if ($after === '' || $after === ' ' || $after === "\t" || $after === "\n" || $after === "\r") {
+                    while ($i < $length && $sql[$i] !== "\n") {
+                        $i++;
+                    }
+                    continue;
+                }
+            }
+
+            if ($char === '#') {
                 while ($i < $length && $sql[$i] !== "\n") {
                     $i++;
                 }
                 continue;
             }
 
-            if (! $inString && $char === '/' && $next === '*') {
+            if ($char === '/' && $next === '*') {
                 $i += 2;
                 while ($i + 1 < $length && ! ($sql[$i] === '*' && $sql[$i + 1] === '/')) {
                     $i++;
@@ -356,17 +504,14 @@ class DatabaseBackupService
                 continue;
             }
 
-            if (($char === "'" || $char === '"' || $char === '`') && ($i === 0 || $sql[$i - 1] !== '\\')) {
-                if (! $inString) {
-                    $inString = true;
-                    $quote = $char;
-                } elseif ($char === $quote) {
-                    $inString = false;
-                    $quote = '';
-                }
+            if ($char === "'" || $char === '"' || $char === '`') {
+                $inString = true;
+                $quote = $char;
+                $buffer .= $char;
+                continue;
             }
 
-            if ($char === ';' && ! $inString) {
+            if ($char === ';') {
                 $statement = trim($buffer);
                 if ($statement !== '') {
                     $statements[] = $statement;
