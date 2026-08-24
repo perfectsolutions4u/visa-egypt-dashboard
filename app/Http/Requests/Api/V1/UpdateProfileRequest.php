@@ -17,6 +17,9 @@ class UpdateProfileRequest extends FormRequest
             'whatsapp' => ['nullable', 'string', 'max:100'],
             'nationality' => ['nullable', 'string', 'max:125'],
             'birthdate' => ['nullable', 'date', 'before:today', 'date_format:Y-m-d'],
+            'gender' => ['nullable', 'string', 'max:32'],
+            'passport_number' => ['nullable', 'string', 'max:64'],
+            'passport_expiry' => ['nullable', 'date', 'date_format:Y-m-d'],
             'image' => ['nullable', 'string'],
         ];
     }

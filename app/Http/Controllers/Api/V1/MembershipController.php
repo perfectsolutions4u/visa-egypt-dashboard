@@ -44,10 +44,15 @@ class MembershipController extends Controller
         $method = VisaPaymentMethod::from($request->get('payment_method'));
 
         $result = $checkout->checkout($request->user(), $request->get('plan_type'), $method);
+        $payment = $result['payment'];
+        $paymentResource = (new VisaPaymentResource($payment))->toArray($request);
+        if ($payment->getAttribute('payment_url')) {
+            $paymentResource['payment_url'] = $payment->getAttribute('payment_url');
+        }
 
         return $this->send([
             'membership' => new MembershipResource($result['membership']),
-            'payment' => new VisaPaymentResource($result['payment']),
+            'payment' => $paymentResource,
             'amount' => $result['amount'],
         ], 'Membership checkout initiated.', 201);
     }

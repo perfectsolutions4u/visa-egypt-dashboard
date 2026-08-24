@@ -25,12 +25,18 @@ class Client extends Authenticatable
         'language',
         'nationality',
         'birthdate',
+        'gender',
+        'passport_number',
+        'passport_expiry',
+        'email_verified_at',
         'blocked',
     ];
 
     protected $casts = [
         'blocked' => 'boolean',
         'birthdate' => 'date',
+        'passport_expiry' => 'date',
+        'email_verified_at' => 'datetime',
     ];
 
     protected $hidden = ['password'];

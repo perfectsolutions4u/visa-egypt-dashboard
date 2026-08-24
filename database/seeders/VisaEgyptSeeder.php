@@ -29,25 +29,173 @@ class VisaEgyptSeeder extends Seeder
 
         $this->seedMembershipPlans();
 
+        Program::query()->update(['is_active' => false]);
+
         $programs = [
-            'Egypt Discovery', 'Nile Adventure', 'Cairo & Luxor Classic', 'Red Sea Escape',
-            'Desert & Oasis', 'Alexandria Coastal', 'Pharaonic Wonders', 'Family Egypt Fun', 'Luxury Egypt Experience',
+            [
+                'name' => 'Cairo Day Tour',
+                'duration' => '1 Day',
+                'cities' => ['Cairo'],
+                'highlights' => ['Pyramids', 'GEM', 'Lunch'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Pyramids & GEM', 'description' => 'Giza pyramids, Sphinx, and Grand Egyptian Museum.'],
+                ],
+                'inclusions' => ['Hotel pickup', 'Lunch', 'Professional Tour Guide', 'Entrance fees'],
+                'exclusions' => ['Personal expenses', 'Tipping'],
+                'starting_price' => 89,
+                'best' => false,
+            ],
+            [
+                'name' => 'Cairo Highlights',
+                'duration' => '2 Days',
+                'cities' => ['Cairo'],
+                'highlights' => ['Pyramids', 'GEM', 'Old Cairo', 'Khan El Khalili'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Pyramids & Museum'],
+                    ['day' => 2, 'title' => 'Old Cairo & Bazaar'],
+                ],
+                'inclusions' => ['Hotel', 'Daily Breakfast', 'Guide', 'Transportation'],
+                'exclusions' => ['International Flights', 'Personal Expenses'],
+                'starting_price' => 189,
+                'best' => false,
+            ],
+            [
+                'name' => 'Cairo & Alexandria',
+                'duration' => '3 Days',
+                'cities' => ['Cairo', 'Alexandria'],
+                'highlights' => ['Cairo', 'Alexandria', 'Citadel'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Arrival Cairo'],
+                    ['day' => 2, 'title' => 'Alexandria Day Tour'],
+                    ['day' => 3, 'title' => 'Citadel & Departure'],
+                ],
+                'inclusions' => ['Hotel', 'Daily Breakfast', 'Guide', 'Transportation'],
+                'exclusions' => ['International Flights', 'Tipping'],
+                'starting_price' => 289,
+                'best' => false,
+            ],
+            [
+                'name' => 'Cairo & Luxor',
+                'duration' => '4 Days',
+                'cities' => ['Cairo', 'Luxor'],
+                'highlights' => ['Cairo', 'Luxor', 'Internal Flight'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Arrival Cairo'],
+                    ['day' => 2, 'title' => 'Pyramids & GEM'],
+                    ['day' => 3, 'title' => 'Flight to Luxor'],
+                    ['day' => 4, 'title' => 'Temples & Departure'],
+                ],
+                'inclusions' => ['Hotel Accommodation', 'Daily Breakfast', 'Domestic Flights', 'Professional Tour Guide'],
+                'exclusions' => ['International Flights', 'Optional Activities'],
+                'starting_price' => 429,
+                'best' => false,
+            ],
+            [
+                'name' => 'Egypt Discovery',
+                'duration' => '5 Days / 4 Nights',
+                'cities' => ['Cairo', 'Luxor', 'Aswan'],
+                'highlights' => ['Pyramids of Giza', 'Grand Egyptian Museum', 'Karnak Temple', 'Luxor Temple', 'Felucca Experience', 'Nubian Village'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Arrival Cairo'],
+                    ['day' => 2, 'title' => 'Pyramids & GEM'],
+                    ['day' => 3, 'title' => 'Flight to Luxor'],
+                    ['day' => 4, 'title' => 'Felucca & Nubian Village'],
+                    ['day' => 5, 'title' => 'Departure'],
+                ],
+                'inclusions' => ['Airport Meet & Assist', 'Hotel Accommodation', 'Daily Breakfast', 'Professional Tour Guide', 'Transportation', 'Domestic Flights'],
+                'exclusions' => ['International Flights', 'Personal Expenses', 'Optional Activities', 'Tipping'],
+                'starting_price' => 595,
+                'best' => true,
+            ],
+            [
+                'name' => 'Nile Cruise Experience',
+                'duration' => '5 Days',
+                'cities' => ['Luxor', 'Aswan'],
+                'highlights' => ['Nile Cruise', 'Luxor', 'Aswan'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Embark Luxor'],
+                    ['day' => 2, 'title' => 'West Bank'],
+                    ['day' => 3, 'title' => 'Edfu & Kom Ombo'],
+                    ['day' => 4, 'title' => 'Aswan Highlights'],
+                    ['day' => 5, 'title' => 'Disembark'],
+                ],
+                'inclusions' => ['Nile Cruise', 'Full board', 'Guide', 'Temple visits'],
+                'exclusions' => ['International Flights', 'Personal Expenses'],
+                'starting_price' => 649,
+                'best' => false,
+            ],
+            [
+                'name' => 'Egypt Classic',
+                'duration' => '6 Days',
+                'cities' => ['Cairo', 'Luxor', 'Aswan'],
+                'highlights' => ['Cairo', 'Luxor', 'Aswan', 'Internal Flights'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Arrival Cairo'],
+                    ['day' => 2, 'title' => 'Pyramids & Museum'],
+                    ['day' => 3, 'title' => 'Flight to Luxor'],
+                    ['day' => 4, 'title' => 'Luxor Temples'],
+                    ['day' => 5, 'title' => 'Aswan'],
+                    ['day' => 6, 'title' => 'Departure'],
+                ],
+                'inclusions' => ['Hotels', 'Breakfast', 'Domestic Flights', 'Guide'],
+                'exclusions' => ['International Flights', 'Tipping'],
+                'starting_price' => 749,
+                'best' => false,
+            ],
+            [
+                'name' => 'Egypt Premium',
+                'duration' => '7 Days',
+                'cities' => ['Cairo', 'Luxor', 'Aswan'],
+                'highlights' => ['Premium Hotels', 'Private Transfers', 'Dedicated Support'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'VIP Arrival'],
+                    ['day' => 2, 'title' => 'Private Cairo Tour'],
+                    ['day' => 3, 'title' => 'Museum & Old Cairo'],
+                    ['day' => 4, 'title' => 'Luxor Private Guide'],
+                    ['day' => 5, 'title' => 'West Bank'],
+                    ['day' => 6, 'title' => 'Aswan Leisure'],
+                    ['day' => 7, 'title' => 'Departure'],
+                ],
+                'inclusions' => ['Premium Hotels', 'Private Transfers', 'Dedicated Support', 'Domestic Flights'],
+                'exclusions' => ['International Flights', 'Personal Expenses'],
+                'starting_price' => 999,
+                'best' => false,
+            ],
+            [
+                'name' => 'Complete Egypt',
+                'duration' => '7 Days',
+                'cities' => ['Cairo', 'Luxor', 'Aswan'],
+                'highlights' => ['Cairo', 'Luxor', 'Aswan', 'Nile Cruise', 'Domestic Flights'],
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Arrival Cairo'],
+                    ['day' => 2, 'title' => 'Pyramids & GEM'],
+                    ['day' => 3, 'title' => 'Flight to Luxor'],
+                    ['day' => 4, 'title' => 'Nile Cruise'],
+                    ['day' => 5, 'title' => 'Temples along the Nile'],
+                    ['day' => 6, 'title' => 'Aswan & Felucca'],
+                    ['day' => 7, 'title' => 'Departure'],
+                ],
+                'inclusions' => ['Hotels & Cruise', 'Breakfast', 'Domestic Flights', 'Guide'],
+                'exclusions' => ['International Flights', 'Optional Activities'],
+                'starting_price' => 1199,
+                'best' => false,
+            ],
         ];
 
-        foreach ($programs as $i => $name) {
+        foreach ($programs as $i => $program) {
             Program::updateOrCreate(
-                ['slug' => Str::slug($name)],
+                ['slug' => Str::slug($program['name'])],
                 [
-                    'name' => $name,
-                    'duration' => '5 Days / 4 Nights',
-                    'cities' => ['Cairo', 'Luxor'],
-                    'highlights' => ['Pyramids', 'Nile Cruise'],
-                    'itinerary' => [['day' => 1, 'title' => 'Arrival', 'description' => 'Airport pickup']],
-                    'inclusions' => ['Hotel', 'Breakfast'],
-                    'exclusions' => ['Flights'],
-                    'starting_price' => 595 - ($i * 20),
+                    'name' => $program['name'],
+                    'duration' => $program['duration'],
+                    'cities' => $program['cities'],
+                    'highlights' => $program['highlights'],
+                    'itinerary' => $program['itinerary'],
+                    'inclusions' => $program['inclusions'],
+                    'exclusions' => $program['exclusions'],
+                    'starting_price' => $program['starting_price'],
                     'is_active' => true,
-                    'is_best_seller' => $i === 0,
+                    'is_best_seller' => $program['best'],
                     'sort_order' => $i + 1,
                 ]
             );
@@ -74,27 +222,73 @@ class VisaEgyptSeeder extends Seeder
             );
         }
 
-        foreach ([3 => 120, 6 => 180, 8 => 240] as $hours => $price) {
+        $transitTours = [
+            [
+                'hours' => 3,
+                'price' => 120,
+                'name' => '3 Hours Transit Tour',
+                'popular' => false,
+                'features' => ['Pyramids', 'Panoramic View', 'Short Stop'],
+            ],
+            [
+                'hours' => 6,
+                'price' => 180,
+                'name' => '6 Hours Transit Tour',
+                'popular' => true,
+                'features' => ['Pyramids', 'Grand Egyptian Museum', 'Lunch', 'Shopping Stop'],
+            ],
+            [
+                'hours' => 8,
+                'price' => 240,
+                'name' => '8 Hours Transit Tour',
+                'popular' => false,
+                'features' => ['Pyramids', 'Grand Egyptian Museum', 'Lunch', 'Shopping', 'Old Cairo Visit'],
+            ],
+        ];
+
+        foreach ($transitTours as $tour) {
             ServicePackage::updateOrCreate(
-                ['service_type' => VisaServiceType::TRANSIT_TOUR->value, 'tier' => "{$hours}h"],
+                ['service_type' => VisaServiceType::TRANSIT_TOUR->value, 'tier' => "{$tour['hours']}h"],
                 [
-                    'name' => "Transit {$hours} Hours",
-                    'price' => $price,
-                    'duration_hours' => $hours,
-                    'features' => ['Guide', 'Transport'],
+                    'name' => $tour['name'],
+                    'price' => $tour['price'],
+                    'duration_hours' => $tour['hours'],
+                    'features' => $tour['features'],
+                    'is_popular' => $tour['popular'],
                     'is_active' => true,
                 ]
             );
         }
 
         $vehicles = [
-            ['type' => 'sedan', 'name' => 'Limousine Sedan', 'max_passengers' => 3, 'max_bags' => 2, 'base_price' => 28],
-            ['type' => 'van', 'name' => 'Hyundai H1 Van', 'max_passengers' => 5, 'max_bags' => 5, 'base_price' => 45],
-            ['type' => 'minibus', 'name' => 'Toyota Hiace Minibus', 'max_passengers' => 8, 'max_bags' => 8, 'base_price' => 75],
+            [
+                'type' => 'sedan',
+                'name' => 'Limousine Sedan',
+                'max_passengers' => 3,
+                'max_bags' => 2,
+                'base_price' => 28,
+                'tags' => 'Couples, Business Travel',
+            ],
+            [
+                'type' => 'van',
+                'name' => 'Hyundai H1 Tourist Van',
+                'max_passengers' => 5,
+                'max_bags' => 5,
+                'base_price' => 45,
+                'tags' => 'Family Transfer, Small Groups',
+            ],
+            [
+                'type' => 'minibus',
+                'name' => 'Toyota Hiace Tourist Minibus',
+                'max_passengers' => 8,
+                'max_bags' => 8,
+                'base_price' => 75,
+                'tags' => 'Groups, Large Families',
+            ],
         ];
 
         foreach ($vehicles as $v) {
-            Vehicle::updateOrCreate(['name' => $v['name']], array_merge($v, ['is_active' => true]));
+            Vehicle::updateOrCreate(['type' => $v['type']], array_merge($v, ['is_active' => true]));
         }
 
         $this->seedAdditionalServices();
@@ -108,8 +302,16 @@ class VisaEgyptSeeder extends Seeder
             ['phone' => '+201000000002', 'license_number' => 'DRV-001', 'languages' => ['ar'], 'rating' => 4.5, 'is_active' => true]
         );
         Staff::updateOrCreate(
-            ['full_name' => 'Sara Guide', 'type' => StaffType::GUIDE->value],
-            ['phone' => '+201000000003', 'languages' => ['en', 'fr'], 'rating' => 4.9, 'is_active' => true]
+            ['type' => StaffType::GUIDE->value],
+            [
+                'full_name' => 'Asma',
+                'phone' => '+201148165143',
+                'whatsapp' => '+201148165143',
+                'license_number' => '17635',
+                'languages' => ['en', 'ar', 'fr'],
+                'rating' => 4.9,
+                'is_active' => true,
+            ]
         );
 
         $this->seedDemoBookings();
@@ -357,9 +559,37 @@ class VisaEgyptSeeder extends Seeder
                 'sort_order' => 3,
             ],
             [
+                'title' => 'Pyramids Half Day Tour',
+                'description' => 'Explore the Pyramids of Giza, Sphinx & more.',
+                'price' => 42.50,
+                'price_from' => false,
+                'icon' => 'tour',
+                'accent_color' => '#C9A227',
+                'features' => [
+                    'Giza Pyramids',
+                    'Sphinx',
+                    'Hotel Pickup',
+                ],
+                'sort_order' => 5,
+            ],
+            [
+                'title' => 'Nile Felucca Ride',
+                'description' => 'Relax and enjoy a traditional sail on the Nile.',
+                'price' => 28,
+                'price_from' => false,
+                'icon' => 'directions_boat',
+                'accent_color' => '#1B7A3A',
+                'features' => [
+                    'Traditional Felucca',
+                    '1 Hour Sail',
+                    'Sunset Option',
+                ],
+                'sort_order' => 6,
+            ],
+            [
                 'title' => 'Nile Dinner Cruise',
-                'description' => 'Enjoy a magical evening on the Nile. Includes hotel pickup and drop-off.',
-                'price' => 75,
+                'description' => 'Enjoy dinner with live show on the Nile.',
+                'price' => 52.50,
                 'price_from' => false,
                 'icon' => 'directions_boat',
                 'accent_color' => '#D32027',
@@ -371,6 +601,7 @@ class VisaEgyptSeeder extends Seeder
                     'Belly Dance & Tanoura Show',
                     '2 Hours Cruise',
                     'Available Daily',
+                    'Visa Club Exclusive',
                 ],
                 'sort_order' => 4,
             ],
@@ -387,91 +618,69 @@ class VisaEgyptSeeder extends Seeder
     private function seedMembershipPlans(): void
     {
         MembershipTier::query()
-            ->whereIn('slug', ['silver', 'gold', 'platinum'])
+            ->whereIn('slug', ['basic', 'comfort', 'premium', 'vip'])
             ->update(['is_active' => false]);
 
         $plans = [
             [
-                'slug' => 'basic',
-                'name' => 'BASIC',
-                'tagline' => 'Essential Support',
-                'description' => 'Airport assistance essentials for a smooth arrival.',
+                'slug' => 'silver',
+                'name' => 'SILVER MEMBER',
+                'tagline' => '15% OFF',
+                'description' => 'Free membership with exclusive deals and booking priority.',
                 'features' => [
-                    'Meet & Greet at Airport',
-                    'Airport Assistance',
-                    'Immigration Guidance',
-                    'Baggage Assistance',
+                    'Travel Program Discounts',
+                    'Members Offers',
+                    'Points Collection',
+                    'Priority Booking',
                 ],
-                'special_offer_text' => 'Visa Fee Not Included',
-                'special_offer_included' => false,
-                'theme_color' => '#007BFF',
+                'special_offer_text' => 'Free Membership',
+                'special_offer_included' => true,
+                'theme_color' => '#9EA7B3',
                 'is_featured' => false,
-                'discount_percent' => 0,
-                'price_usd' => 15,
+                'discount_percent' => 15,
+                'price_usd' => 0,
                 'sort_order' => 1,
                 'is_active' => true,
             ],
             [
-                'slug' => 'comfort',
-                'name' => 'COMFORT',
-                'tagline' => 'Enhanced Airport Care',
-                'description' => 'Faster processing and priority support at the airport.',
+                'slug' => 'gold',
+                'name' => 'GOLD MEMBER',
+                'tagline' => '20% OFF',
+                'description' => 'Most popular club level with faster support and bonus points.',
                 'features' => [
-                    'All Basic Services',
-                    'Fast Track Immigration',
-                    'Priority Visa Processing',
-                    'Baggage Assistance',
+                    'All Silver Benefits',
+                    'Exclusive Promotions',
+                    'Faster Support',
+                    'Bonus Points',
                 ],
-                'special_offer_text' => 'Visa On Arrival Included (30 USD)',
+                'special_offer_text' => 'MOST POPULAR',
                 'special_offer_included' => true,
-                'theme_color' => '#00A884',
-                'is_featured' => false,
-                'discount_percent' => 5,
-                'price_usd' => 45,
+                'theme_color' => '#C5A059',
+                'is_featured' => true,
+                'discount_percent' => 20,
+                'price_usd' => 49,
                 'sort_order' => 2,
                 'is_active' => true,
             ],
             [
-                'slug' => 'premium',
-                'name' => 'PREMIUM',
-                'tagline' => 'Best Value Package',
-                'description' => 'Dedicated representative and lounge access for premium travelers.',
+                'slug' => 'platinum',
+                'name' => 'PLATINUM MEMBER',
+                'tagline' => '25% OFF',
+                'description' => 'Best value VIP membership with airport benefits.',
                 'features' => [
-                    'All Comfort Services',
-                    'Hotel Transfer (One Way)',
-                    'Dedicated Representative',
-                    'Airport Lounge Access (3 Hours)',
-                    'Baggage Assistance',
+                    'All Gold Benefits',
+                    'VIP Priority Support',
+                    'Premium Offers',
+                    'Airport Benefits',
+                    'Extra Reward Points',
                 ],
-                'special_offer_text' => 'Visa On Arrival Included (30 USD)',
+                'special_offer_text' => 'BEST VALUE',
                 'special_offer_included' => true,
-                'theme_color' => '#6F42C1',
-                'is_featured' => true,
-                'discount_percent' => 10,
-                'price_usd' => 75,
-                'sort_order' => 3,
-                'is_active' => true,
-            ],
-            [
-                'slug' => 'vip',
-                'name' => 'VIP',
-                'tagline' => 'Ultimate Experience',
-                'description' => 'Private escort, concierge service, and unlimited lounge access.',
-                'features' => [
-                    'All Premium Services',
-                    'VIP Fast Track',
-                    'Private Escort',
-                    'Concierge Service',
-                    'Airport Lounge Access (Unlimited)',
-                    'Flight Monitoring & Support',
-                ],
-                'special_offer_text' => 'Visa On Arrival Included (30 USD)',
-                'special_offer_included' => true,
-                'theme_color' => '#D4AF37',
+                'theme_color' => '#3B6CB5',
                 'is_featured' => false,
-                'discount_percent' => 15,
-                'price_usd' => 125,
-                'sort_order' => 4,
+                'discount_percent' => 25,
+                'price_usd' => 99,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
         ];

@@ -93,4 +93,65 @@ class WalletService
             'reference' => 'admin_adjustment',
         ]);
     }
+
+    public function creditTopUp(Client $client, float $amount, VisaPayment $payment): WalletTransaction
+    {
+        $wallet = $this->getOrCreateWallet($client);
+        $wallet->increment('balance', $amount);
+
+        return $wallet->transactions()->create([
+            'type' => WalletTransactionType::CREDIT,
+            'amount' => $amount,
+            'description' => 'Wallet top-up',
+            'reference' => 'topup:'.$payment->id,
+        ]);
+    }
+
+    public function transfer(Client $from, Client $to, float $amount, ?string $note = null): array
+    {
+        if ($from->id === $to->id) {
+            throw ValidationException::withMessages([
+                'email' => ['You cannot transfer to yourself.'],
+            ]);
+        }
+
+        if ($amount <= 0) {
+            throw ValidationException::withMessages([
+                'amount' => ['Transfer amount must be greater than zero.'],
+            ]);
+        }
+
+        $fromWallet = $this->getOrCreateWallet($from);
+        if ((float) $fromWallet->balance < $amount) {
+            throw ValidationException::withMessages([
+                'amount' => ['Insufficient wallet balance.'],
+            ]);
+        }
+
+        $toWallet = $this->getOrCreateWallet($to);
+        $description = $note ?: 'Wallet transfer';
+
+        $fromWallet->decrement('balance', $amount);
+        $debit = $fromWallet->transactions()->create([
+            'type' => WalletTransactionType::DEBIT,
+            'amount' => $amount,
+            'description' => $description.' → '.$to->email,
+            'reference' => 'transfer_out:'.$to->id,
+        ]);
+
+        $toWallet->increment('balance', $amount);
+        $credit = $toWallet->transactions()->create([
+            'type' => WalletTransactionType::CREDIT,
+            'amount' => $amount,
+            'description' => $description.' ← '.$from->email,
+            'reference' => 'transfer_in:'.$from->id,
+        ]);
+
+        return [
+            'from_balance' => round((float) $fromWallet->fresh()->balance, 2),
+            'to_balance' => round((float) $toWallet->fresh()->balance, 2),
+            'debit' => $debit,
+            'credit' => $credit,
+        ];
+    }
 }

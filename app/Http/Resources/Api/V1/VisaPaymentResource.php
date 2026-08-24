@@ -25,6 +25,8 @@ class VisaPaymentResource extends JsonResource
             'gateway_reference' => $this->gateway_reference,
             'visa_booking_id' => $this->visa_booking_id,
             'membership_id' => $this->membership_id,
+            'purpose' => $this->purpose,
+            'payment_url' => $this->payment_url ?? null,
             'created_at' => $this->created_at?->toIso8601String(),
         ];
     }

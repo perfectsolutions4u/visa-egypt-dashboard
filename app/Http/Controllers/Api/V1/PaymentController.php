@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\Visa\VisaBookingStatus;
 use App\Enums\Visa\VisaPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\CreatePaymentRequest;
 use App\Http\Resources\Api\V1\VisaPaymentResource;
+use App\Models\Visa\VisaBooking;
 use App\Models\Visa\VisaPayment;
 use App\Models\Visa\Voucher;
 use App\Services\Visa\LoyaltyService;
+use App\Services\Visa\MembershipCheckoutService;
 use App\Services\Visa\PaymentDiscountService;
+use App\Services\Visa\VisaPaymentGatewayService;
 use App\Services\Visa\VisaVoucherPaymentService;
 use App\Services\Visa\WalletService;
 use App\Traits\Response\HasApiResponse;
@@ -27,10 +31,16 @@ class PaymentController extends Controller
         PaymentDiscountService $discounts,
         LoyaltyService $loyalty,
         VisaVoucherPaymentService $voucherPayments,
-        WalletService $wallets
+        WalletService $wallets,
+        VisaPaymentGatewayService $gateway,
+        MembershipCheckoutService $membershipCheckout
     ) {
         $client = $request->user();
         $data = $request->validated();
+        $purpose = $data['purpose'] ?? (
+            ! empty($data['membership_id']) ? 'membership'
+                : (! empty($data['visa_booking_id']) ? 'booking' : 'booking')
+        );
 
         if (! empty($data['visa_booking_id'])) {
             $booking = $client->visaBookings()->findOrFail($data['visa_booking_id']);
@@ -70,7 +80,10 @@ class PaymentController extends Controller
             $voucherPayments,
             $wallets,
             $preview,
-            $subtotal
+            $subtotal,
+            $purpose,
+            $gateway,
+            $membershipCheckout
         ) {
             $method = $data['method'];
             $status = VisaPaymentStatus::PENDING;
@@ -86,6 +99,7 @@ class PaymentController extends Controller
                 'client_id' => $client->id,
                 'visa_booking_id' => $data['visa_booking_id'] ?? null,
                 'membership_id' => $data['membership_id'] ?? null,
+                'purpose' => $purpose,
                 'subtotal' => $subtotal,
                 'discount_type' => $preview['discount_type'],
                 'coupon_id' => $preview['coupon_id'],
@@ -124,12 +138,37 @@ class PaymentController extends Controller
                 );
             }
 
-            $loyalty->earnForPayment($client, $payment, (int) $preview['points_to_earn']);
+            if ($status !== VisaPaymentStatus::COMPLETED) {
+                $initiation = $gateway->initiate($payment);
+                if ($initiation['auto_completed']) {
+                    $payment = $gateway->markCompleted($payment);
+                } else {
+                    $payment->update(['status' => $initiation['status']]);
+                    $payment->setAttribute('payment_url', $initiation['payment_url']);
+                }
+            }
+
+            if ($payment->status === VisaPaymentStatus::COMPLETED) {
+                $loyalty->earnForPayment($client, $payment, (int) $preview['points_to_earn']);
+                $membershipCheckout->activateAfterPayment($payment);
+                $this->confirmBookingIfPaid($payment);
+                if ($purpose === 'wallet_topup') {
+                    $wallets->creditTopUp($client, (float) $payment->amount, $payment);
+                }
+            }
 
             return $payment;
         });
 
-        return $this->send(new VisaPaymentResource($payment), 'Payment initiated.', 201);
+        $resource = (new VisaPaymentResource($payment))->toArray($request);
+        if ($payment->getAttribute('payment_url')) {
+            $resource['payment_url'] = $payment->getAttribute('payment_url');
+        } elseif ($payment->status !== VisaPaymentStatus::COMPLETED) {
+            $initiation = $gateway->initiate($payment);
+            $resource['payment_url'] = $initiation['payment_url'];
+        }
+
+        return $this->send($resource, 'Payment initiated.', 201);
     }
 
     public function show(Request $request, VisaPayment $payment)
@@ -137,5 +176,54 @@ class PaymentController extends Controller
         abort_if($payment->client_id !== $request->user()->id, 403);
 
         return $this->send(new VisaPaymentResource($payment));
+    }
+
+    public function confirm(
+        Request $request,
+        VisaPayment $payment,
+        VisaPaymentGatewayService $gateway,
+        LoyaltyService $loyalty,
+        MembershipCheckoutService $membershipCheckout,
+        WalletService $wallets
+    ) {
+        abort_if($payment->client_id !== $request->user()->id, 403);
+
+        if ($payment->status === VisaPaymentStatus::COMPLETED) {
+            return $this->send(new VisaPaymentResource($payment), 'Payment already completed.');
+        }
+
+        $payment = DB::transaction(function () use ($payment, $gateway, $loyalty, $membershipCheckout, $wallets) {
+            $payment = $gateway->markCompleted($payment);
+            $loyalty->earnForPayment($payment->client, $payment, (int) ($payment->points_earned ?? 0));
+            $membershipCheckout->activateAfterPayment($payment);
+            $this->confirmBookingIfPaid($payment);
+            if ($payment->purpose === 'wallet_topup') {
+                $wallets->creditTopUp($payment->client, (float) $payment->amount, $payment);
+            }
+
+            return $payment;
+        });
+
+        return $this->send(new VisaPaymentResource($payment), 'Payment confirmed.');
+    }
+
+    private function confirmBookingIfPaid(VisaPayment $payment): void
+    {
+        if (! $payment->visa_booking_id) {
+            return;
+        }
+
+        $booking = VisaBooking::query()->find($payment->visa_booking_id);
+        if (! $booking) {
+            return;
+        }
+
+        $status = $booking->status instanceof VisaBookingStatus
+            ? $booking->status
+            : VisaBookingStatus::tryFrom((string) $booking->status);
+
+        if ($status === VisaBookingStatus::PENDING) {
+            $booking->update(['status' => VisaBookingStatus::CONFIRMED]);
+        }
     }
 }

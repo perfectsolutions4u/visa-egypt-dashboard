@@ -27,6 +27,7 @@ class CreatePaymentRequest extends FormRequest
             'wallet_amount_to_use' => ['nullable', 'numeric', 'min:0.01'],
             'method' => ['required', Rule::in(VisaPaymentMethod::all())],
             'currency' => ['nullable', 'string', 'max:10'],
+            'purpose' => ['nullable', Rule::in(['booking', 'membership', 'wallet_topup'])],
         ];
     }
 }

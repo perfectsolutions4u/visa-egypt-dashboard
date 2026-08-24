@@ -20,6 +20,8 @@
                         <x-dashboard.form.input-text error-key="name" name="name" id="name" label-title="Name"/>
                         <x-dashboard.form.input-text error-key="max_passengers" name="max_passengers" id="max_passengers" label-title="Max Passengers" :value="old('max_passengers', 3)"/>
                         <x-dashboard.form.input-text error-key="max_bags" name="max_bags" id="max_bags" label-title="Max Bags" :value="old('max_bags', 2)"/>
+                        <x-dashboard.form.input-text error-key="base_price" name="base_price" id="base_price" label-title="Base Price (USD)" :value="old('base_price', 0)"/>
+                        <x-dashboard.form.input-text error-key="tags" name="tags" id="tags" label-title="Tags (comma separated)" :value="old('tags')"/>
                         <x-dashboard.form.input-text error-key="image" name="image" id="image" label-title="Image URL"/>
                         <x-dashboard.form.input-checkbox resource-name="Vehicle" error-key="is_active" :value="true" name="is_active" id="is_active" label-title="Active"/>
                         <x-dashboard.form.submit-button/>

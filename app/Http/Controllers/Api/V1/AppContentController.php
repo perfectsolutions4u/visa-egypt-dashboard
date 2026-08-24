@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Enums\Visa\StaffType;
 use App\Models\Visa\AdditionalService;
 use App\Models\Visa\MembershipTier;
 use App\Models\Visa\Offer;
+use App\Models\Visa\Staff;
 use Illuminate\Support\Facades\Schema;
 use App\Services\Visa\PoliciesContentService;
 use App\Services\Visa\SupportContentService;
@@ -93,6 +95,23 @@ class AppContentController extends Controller
         return $this->send($offers);
     }
 
+    public function transitGuide()
+    {
+        $guide = Staff::query()
+            ->where('type', StaffType::GUIDE->value)
+            ->where('is_active', true)
+            ->orderByDesc('rating')
+            ->first();
+
+        return $this->send([
+            'full_name' => $guide?->full_name ?? 'Asma',
+            'title' => 'Licensed Egyptologist Guide',
+            'license_number' => $guide?->license_number ?? '17635',
+            'whatsapp' => $guide?->whatsapp ?? $guide?->phone ?? '+201148165143',
+            'photo' => $guide?->photo,
+        ]);
+    }
+
     public function membershipPlans()
     {
         $plans = MembershipTier::activeOrdered()
@@ -102,9 +121,9 @@ class AppContentController extends Controller
 
         if ($plans === []) {
             $plans = [
-                ['tier' => 'silver', 'name' => 'Silver Member', 'discount_percent' => 10, 'price_usd' => 49],
-                ['tier' => 'gold', 'name' => 'Gold Member', 'discount_percent' => 15, 'price_usd' => 99],
-                ['tier' => 'platinum', 'name' => 'Platinum Member', 'discount_percent' => 25, 'price_usd' => 199],
+                ['tier' => 'silver', 'name' => 'Silver Member', 'discount_percent' => 15, 'price_usd' => 0],
+                ['tier' => 'gold', 'name' => 'Gold Member', 'discount_percent' => 20, 'price_usd' => 49],
+                ['tier' => 'platinum', 'name' => 'Platinum Member', 'discount_percent' => 25, 'price_usd' => 99],
             ];
         }
 

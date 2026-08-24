@@ -52,6 +52,8 @@ class VehicleDataTable extends DataTable
             Column::make('name'),
             Column::make('max_passengers'),
             Column::make('max_bags'),
+            Column::make('base_price'),
+            Column::make('tags'),
             Column::make('is_active'),
             Column::make('created_at'),
             Column::computed('action')

@@ -16,6 +16,7 @@ class VehicleResource extends JsonResource
             'max_bags' => $this->max_bags,
             'base_price' => $this->base_price,
             'image' => $this->image,
+            'tags' => array_values(array_filter(array_map('trim', explode(',', (string) $this->tags)))),
         ];
     }
 }

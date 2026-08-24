@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Vehicle extends Model
 {
     protected $fillable = [
-        'type', 'name', 'max_passengers', 'max_bags', 'base_price', 'image', 'is_active',
+        'type', 'name', 'max_passengers', 'max_bags', 'base_price', 'image', 'tags', 'is_active',
     ];
 
     protected $casts = [

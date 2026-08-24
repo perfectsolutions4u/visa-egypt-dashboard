@@ -6,15 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ForgetPasswordNotification extends Notification
+class VerifyOtpNotification extends Notification
 {
     use Queueable;
 
-    public int $otp;
-
-    public function __construct($otp)
+    public function __construct(public string $otp)
     {
-        $this->otp = $otp;
         $this->locale = app()->getLocale();
     }
 
@@ -26,12 +23,11 @@ class ForgetPasswordNotification extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject(__('messages.notifications.password.forget.otp'))
+            ->subject('Visa Egypt verification code')
             ->greeting(__('messages.notifications.greeting', ['name' => $notifiable->name]))
-            ->line(__('messages.notifications.password.forget.request_received'))
-            ->line(__('messages.notifications.password.forget.dont_worry'))
-            ->line(__('messages.notifications.password.forget.request_otp', ['otp' => $this->otp]))
-            ->line(__('messages.notifications.password.forget.ignore_mail'))
+            ->line('Use this verification code to confirm your account:')
+            ->line("**{$this->otp}**")
+            ->line('This code expires in 10 minutes.')
             ->line(__('messages.notifications.thanks_for_using_our_app'));
     }
 

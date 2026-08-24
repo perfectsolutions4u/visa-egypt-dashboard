@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class VisaPayment extends Model
 {
     protected $fillable = [
-        'client_id', 'visa_booking_id', 'membership_id', 'subtotal', 'discount_type',
+        'client_id', 'visa_booking_id', 'membership_id', 'purpose', 'subtotal', 'discount_type',
         'coupon_id', 'voucher_id', 'loyalty_discount',
         'points_used', 'points_earned', 'amount', 'currency',
         'method', 'status', 'gateway_reference',

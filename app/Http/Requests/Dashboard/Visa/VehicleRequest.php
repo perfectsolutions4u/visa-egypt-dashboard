@@ -20,7 +20,9 @@ class VehicleRequest extends FormRequest
             'name' => 'Name',
             'max_passengers' => 'Max Passengers',
             'max_bags' => 'Max Bags',
+            'base_price' => 'Base Price',
             'image' => 'Image',
+            'tags' => 'Tags',
             'is_active' => 'Active',
         ];
     }
@@ -32,7 +34,9 @@ class VehicleRequest extends FormRequest
             'name' => ['required', 'string', 'max:125'],
             'max_passengers' => ['required', 'integer', 'min:1', 'max:255'],
             'max_bags' => ['required', 'integer', 'min:0', 'max:255'],
+            'base_price' => ['required', 'numeric', 'min:0'],
             'image' => ['nullable', 'string', 'max:255'],
+            'tags' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable'],
         ];
     }
